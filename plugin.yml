@@ -1,0 +1,22 @@
+name: BlossomQuests
+version: 1.0.0
+main: com.blossomsmp.quests.BlossomQuests
+api-version: '1.21'
+author: BlossomSMP
+description: Daily and weekly quests, achievements, a player Quest Board, the Sakura Warden boss and the Petal Reaper.
+softdepend: [Vault, PlaceholderAPI, BlossomEconomy, BlossomCore, BlossomToggles, BlossomSettings]
+
+commands:
+  quest:
+    description: Open the quest menu
+    aliases: [quests]
+    usage: /quest
+  bq:
+    description: BlossomQuests staff commands
+    aliases: [blossomquests]
+    usage: /bq
+
+permissions:
+  blossomquests.admin:
+    description: Staff commands (/bq) and removing other players' board requests
+    default: op

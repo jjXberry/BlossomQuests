@@ -1,0 +1,547 @@
+# ============================================
+#   ❀ BlossomQuests - quests.yml ❀
+# ============================================
+# Every player gets 3 random DAILY quests each day and 3 random WEEKLY quests each Monday
+# (change how many in config.yml). Add, remove or change quests here, then /bq reload.
+#
+# type:   MINE, PLACE, KILL, KILL_PLAYER, FISH, CRAFT, BREED, PLAYTIME (minutes), BOSS (Sakura Warden)
+# target: ANY, a list of blocks/items/mobs like [DIAMOND_ORE, DEEPSLATE_DIAMOND_ORE],
+#         or HOSTILE for any hostile mob (KILL only)
+# description: (optional) your own text. Without it, one is made for you ("Mine 5 Diamond Ore").
+# rewards: money, petals, points (Blossom Points), items: ["sigil:1", "reaper:1", "DIAMOND:5"],
+#          commands: ["say %player% is awesome"]
+#
+# Blocks players placed themselves don't count for MINE quests.
+
+daily:
+  diamond_hunter:
+    name: "Diamond Hunter"
+    icon: DIAMOND
+    type: MINE
+    target: [DIAMOND_ORE, DEEPSLATE_DIAMOND_ORE]
+    amount: 5
+    rewards:
+      money: 1000
+      petals: 100
+      points: 20
+  iron_miner:
+    name: "Iron Miner"
+    icon: RAW_IRON
+    type: MINE
+    target: [IRON_ORE, DEEPSLATE_IRON_ORE]
+    amount: 24
+    rewards:
+      money: 400
+      petals: 40
+      points: 10
+  coal_digger:
+    name: "Coal Digger"
+    icon: COAL
+    type: MINE
+    target: [COAL_ORE, DEEPSLATE_COAL_ORE]
+    amount: 40
+    rewards:
+      money: 250
+      petals: 30
+      points: 5
+  stone_breaker:
+    name: "Stone Breaker"
+    icon: STONE_PICKAXE
+    type: MINE
+    target: [STONE, DEEPSLATE, COBBLESTONE, ANDESITE, DIORITE, GRANITE, TUFF]
+    amount: 256
+    rewards:
+      money: 300
+      petals: 30
+      points: 5
+  lumberjack:
+    name: "Lumberjack"
+    icon: OAK_LOG
+    type: MINE
+    target: [OAK_LOG, SPRUCE_LOG, BIRCH_LOG, JUNGLE_LOG, ACACIA_LOG, DARK_OAK_LOG, MANGROVE_LOG, CHERRY_LOG, PALE_OAK_LOG]
+    amount: 64
+    rewards:
+      money: 300
+      petals: 30
+      points: 5
+  cherry_picker:
+    name: "Cherry Picker"
+    icon: CHERRY_LOG
+    type: MINE
+    target: [CHERRY_LOG]
+    amount: 32
+    rewards:
+      money: 450
+      petals: 60
+      points: 10
+  builder:
+    name: "Busy Builder"
+    icon: BRICKS
+    type: PLACE
+    target: ANY
+    amount: 200
+    rewards:
+      money: 250
+      petals: 30
+      points: 5
+  zombie_slayer:
+    name: "Zombie Slayer"
+    icon: ROTTEN_FLESH
+    type: KILL
+    target: [ZOMBIE, ZOMBIE_VILLAGER, HUSK, DROWNED]
+    amount: 15
+    rewards:
+      money: 300
+      petals: 30
+      points: 5
+  bone_collector:
+    name: "Bone Collector"
+    icon: BONE
+    type: KILL
+    target: [SKELETON, STRAY, BOGGED]
+    amount: 15
+    rewards:
+      money: 300
+      petals: 30
+      points: 5
+  creeper_cleanup:
+    name: "Creeper Cleanup"
+    icon: GUNPOWDER
+    type: KILL
+    target: [CREEPER]
+    amount: 8
+    rewards:
+      money: 400
+      petals: 40
+      points: 10
+  spider_squasher:
+    name: "Spider Squasher"
+    icon: STRING
+    type: KILL
+    target: [SPIDER, CAVE_SPIDER]
+    amount: 12
+    rewards:
+      money: 300
+      petals: 30
+      points: 5
+  monster_hunter:
+    name: "Monster Hunter"
+    icon: IRON_SWORD
+    type: KILL
+    target: [HOSTILE]
+    amount: 40
+    rewards:
+      money: 600
+      petals: 60
+      points: 10
+  enderman_hunter:
+    name: "Ender Hunter"
+    icon: ENDER_PEARL
+    type: KILL
+    target: [ENDERMAN]
+    amount: 5
+    rewards:
+      money: 800
+      petals: 80
+      points: 15
+  fisher:
+    name: "Gone Fishing"
+    icon: FISHING_ROD
+    type: FISH
+    target: ANY
+    amount: 10
+    rewards:
+      money: 350
+      petals: 40
+      points: 5
+  baker:
+    name: "Baker"
+    icon: BREAD
+    type: CRAFT
+    target: [BREAD]
+    amount: 32
+    rewards:
+      money: 250
+      petals: 25
+      points: 5
+  toolsmith:
+    name: "Toolsmith"
+    icon: IRON_PICKAXE
+    type: CRAFT
+    target: [IRON_PICKAXE, IRON_AXE, IRON_SHOVEL, IRON_SWORD, IRON_HOE]
+    amount: 3
+    rewards:
+      money: 300
+      petals: 30
+      points: 5
+  rancher:
+    name: "Rancher"
+    icon: WHEAT
+    type: BREED
+    target: ANY
+    amount: 10
+    rewards:
+      money: 350
+      petals: 40
+      points: 5
+  dedicated:
+    name: "Dedicated Player"
+    icon: CLOCK
+    type: PLAYTIME
+    target: ANY
+    amount: 60
+    rewards:
+      money: 500
+      petals: 75
+      points: 10
+  pvp_warrior:
+    name: "Warrior"
+    icon: DIAMOND_SWORD
+    type: KILL_PLAYER
+    target: ANY
+    amount: 3
+    rewards:
+      money: 1000
+      petals: 100
+      points: 20
+
+weekly:
+  diamond_rush:
+    name: "Diamond Rush"
+    icon: DIAMOND_BLOCK
+    type: MINE
+    target: [DIAMOND_ORE, DEEPSLATE_DIAMOND_ORE]
+    amount: 32
+    rewards:
+      money: 10000
+      petals: 500
+      points: 100
+  ancient_digger:
+    name: "Ancient Digger"
+    icon: NETHERITE_SCRAP
+    type: MINE
+    target: [ANCIENT_DEBRIS]
+    amount: 4
+    rewards:
+      money: 12000
+      petals: 500
+      points: 100
+  deep_miner:
+    name: "Deep Miner"
+    icon: DEEPSLATE
+    type: MINE
+    target: [DEEPSLATE, TUFF, DEEPSLATE_IRON_ORE, DEEPSLATE_GOLD_ORE, DEEPSLATE_DIAMOND_ORE, DEEPSLATE_REDSTONE_ORE, DEEPSLATE_LAPIS_ORE, DEEPSLATE_COPPER_ORE, DEEPSLATE_COAL_ORE, DEEPSLATE_EMERALD_ORE]
+    amount: 1500
+    rewards:
+      money: 5000
+      petals: 300
+      points: 50
+  forest_clearer:
+    name: "Forest Clearer"
+    icon: DIAMOND_AXE
+    type: MINE
+    target: [OAK_LOG, SPRUCE_LOG, BIRCH_LOG, JUNGLE_LOG, ACACIA_LOG, DARK_OAK_LOG, MANGROVE_LOG, CHERRY_LOG, PALE_OAK_LOG]
+    amount: 512
+    rewards:
+      money: 4000
+      petals: 250
+      points: 40
+  master_builder:
+    name: "Master Builder"
+    icon: BRICKS
+    type: PLACE
+    target: ANY
+    amount: 2000
+    rewards:
+      money: 5000
+      petals: 300
+      points: 50
+  monster_slayer:
+    name: "Monster Slayer"
+    icon: NETHERITE_SWORD
+    type: KILL
+    target: [HOSTILE]
+    amount: 300
+    rewards:
+      money: 8000
+      petals: 400
+      points: 75
+  blaze_runner:
+    name: "Blaze Runner"
+    icon: BLAZE_ROD
+    type: KILL
+    target: [BLAZE]
+    amount: 30
+    rewards:
+      money: 7000
+      petals: 400
+      points: 60
+  ender_raider:
+    name: "Ender Raider"
+    icon: ENDER_EYE
+    type: KILL
+    target: [ENDERMAN]
+    amount: 40
+    rewards:
+      money: 8000
+      petals: 400
+      points: 75
+  master_angler:
+    name: "Master Angler"
+    icon: TROPICAL_FISH
+    type: FISH
+    target: ANY
+    amount: 75
+    rewards:
+      money: 5000
+      petals: 300
+      points: 50
+  big_farmer:
+    name: "Big Farmer"
+    icon: HAY_BLOCK
+    type: BREED
+    target: ANY
+    amount: 60
+    rewards:
+      money: 4000
+      petals: 250
+      points: 40
+  no_life:
+    name: "Blossom Regular"
+    icon: CLOCK
+    type: PLAYTIME
+    target: ANY
+    amount: 600
+    rewards:
+      money: 6000
+      petals: 500
+      points: 80
+  champion:
+    name: "Champion"
+    icon: NETHERITE_SWORD
+    type: KILL_PLAYER
+    target: ANY
+    amount: 20
+    rewards:
+      money: 15000
+      petals: 600
+      points: 150
+  warden_slayer:
+    name: "Warden Slayer"
+    icon: WITHER_SKELETON_SKULL
+    type: BOSS
+    target: ANY
+    amount: 1
+    rewards:
+      money: 15000
+      petals: 600
+      points: 150
+
+# ============================================
+# Achievements: one-time goals. counter can be:
+# mine, place, kill_mob, kill_player, fish, craft, breed, playtime (minutes),
+# boss (Sakura Warden kills), quests (quests finished), board (Quest Board deliveries)
+# ============================================
+achievements:
+  first_steps:
+    name: "First Steps"
+    description: "Finish your first quest"
+    icon: PAPER
+    counter: quests
+    goal: 1
+    rewards:
+      money: 500
+      petals: 50
+      points: 10
+  quest_lover:
+    name: "Quest Lover"
+    description: "Finish 25 quests"
+    icon: WRITABLE_BOOK
+    counter: quests
+    goal: 25
+    rewards:
+      money: 5000
+      petals: 300
+      points: 50
+  quest_master:
+    name: "Quest Master"
+    description: "Finish 100 quests"
+    icon: ENCHANTED_BOOK
+    counter: quests
+    goal: 100
+    rewards:
+      money: 20000
+      petals: 1000
+      points: 200
+      items: ["sigil:1"]
+  miner_1:
+    name: "Miner I"
+    description: "Mine 1,000 blocks"
+    icon: STONE_PICKAXE
+    counter: mine
+    goal: 1000
+    rewards:
+      money: 1000
+      petals: 100
+      points: 20
+  miner_2:
+    name: "Miner II"
+    description: "Mine 10,000 blocks"
+    icon: IRON_PICKAXE
+    counter: mine
+    goal: 10000
+    rewards:
+      money: 7500
+      petals: 400
+      points: 75
+  miner_3:
+    name: "Miner III"
+    description: "Mine 50,000 blocks"
+    icon: DIAMOND_PICKAXE
+    counter: mine
+    goal: 50000
+    rewards:
+      money: 25000
+      petals: 1000
+      points: 200
+  builder_1:
+    name: "Builder I"
+    description: "Place 2,500 blocks"
+    icon: BRICKS
+    counter: place
+    goal: 2500
+    rewards:
+      money: 1500
+      petals: 100
+      points: 20
+  builder_2:
+    name: "Builder II"
+    description: "Place 25,000 blocks"
+    icon: CHERRY_PLANKS
+    counter: place
+    goal: 25000
+    rewards:
+      money: 10000
+      petals: 500
+      points: 100
+  hunter_1:
+    name: "Hunter I"
+    description: "Kill 250 mobs"
+    icon: IRON_SWORD
+    counter: kill_mob
+    goal: 250
+    rewards:
+      money: 1500
+      petals: 100
+      points: 20
+  hunter_2:
+    name: "Hunter II"
+    description: "Kill 2,500 mobs"
+    icon: DIAMOND_SWORD
+    counter: kill_mob
+    goal: 2500
+    rewards:
+      money: 10000
+      petals: 500
+      points: 100
+  pvp_1:
+    name: "Fighter"
+    description: "Kill 10 players"
+    icon: GOLDEN_SWORD
+    counter: kill_player
+    goal: 10
+    rewards:
+      money: 3000
+      petals: 200
+      points: 40
+  pvp_2:
+    name: "Gladiator"
+    description: "Kill 100 players"
+    icon: NETHERITE_SWORD
+    counter: kill_player
+    goal: 100
+    rewards:
+      money: 20000
+      petals: 1000
+      points: 200
+  angler:
+    name: "Angler"
+    description: "Catch 250 fish"
+    icon: FISHING_ROD
+    counter: fish
+    goal: 250
+    rewards:
+      money: 4000
+      petals: 250
+      points: 50
+  crafter:
+    name: "Crafter"
+    description: "Craft 1,000 items"
+    icon: CRAFTING_TABLE
+    counter: craft
+    goal: 1000
+    rewards:
+      money: 3000
+      petals: 200
+      points: 40
+  farmer:
+    name: "Farmer"
+    description: "Breed 200 animals"
+    icon: WHEAT
+    counter: breed
+    goal: 200
+    rewards:
+      money: 4000
+      petals: 250
+      points: 50
+  time_10:
+    name: "Settling In"
+    description: "Play for 10 hours"
+    icon: CLOCK
+    counter: playtime
+    goal: 600
+    rewards:
+      money: 3000
+      petals: 250
+      points: 50
+  time_100:
+    name: "Blossom Veteran"
+    description: "Play for 100 hours"
+    icon: RECOVERY_COMPASS
+    counter: playtime
+    goal: 6000
+    rewards:
+      money: 25000
+      petals: 1500
+      points: 300
+  warden_1:
+    name: "Warden Hunter"
+    description: "Help defeat the Sakura Warden"
+    icon: WITHER_SKELETON_SKULL
+    counter: boss
+    goal: 1
+    rewards:
+      money: 5000
+      petals: 300
+      points: 50
+  warden_10:
+    name: "Warden's Bane"
+    description: "Help defeat the Sakura Warden 10 times"
+    icon: NETHER_STAR
+    counter: boss
+    goal: 10
+    rewards:
+      money: 30000
+      petals: 1500
+      points: 300
+      items: ["sigil:1"]
+  courier:
+    name: "Courier"
+    description: "Deliver 10 Quest Board requests"
+    icon: CHEST
+    counter: board
+    goal: 10
+    rewards:
+      money: 3000
+      petals: 200
+      points: 40

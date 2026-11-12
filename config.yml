@@ -1,0 +1,99 @@
+# ============================================
+#   ❀ BlossomQuests 1.0 - Blossom SMP ❀
+# ============================================
+# Colours: &a, &d, &l ... and hex like &#FF69B4
+# After editing: /bq reload
+# The quests themselves are in quests.yml
+
+prefix: "&#FF69B4&l❀ &8» &r"
+
+quests:
+  # Quests reset at midnight in this time zone (daily) and on Monday (weekly)
+  timezone: "America/New_York"
+  daily-count: 3
+  weekly-count: 3
+  # Mobs from spawners don't count for kill quests (stops mob-farm AFKing)
+  count-spawner-mobs: false
+  # Killing the same player again within this many minutes doesn't count
+  same-player-kill-minutes: 10
+  # Playtime quests stop counting if you don't move for this many minutes
+  afk-minutes: 5
+
+rewards:
+  # How Petals are given (BlossomToggles / BlossomSettings)
+  petals-command: "petals give %player% %amount%"
+  # Blossom Points (BlossomCore). Only used if BlossomCore is installed.
+  points-enabled: true
+  points-command: "blossomcore points give %player% %amount%"
+
+board:
+  # Most requests one player can have on the board at once
+  max-requests-per-player: 3
+  min-reward: 100
+  max-amount: 1728
+  # Requests are removed after this long (the money goes back to the poster)
+  expire-hours: 72
+  # % of the reward the server keeps (0 = the deliverer gets everything)
+  tax-percent: 0
+  # Tell everyone when a request is posted
+  announce: true
+  banned-items: [BEDROCK, BARRIER, COMMAND_BLOCK, SPAWNER, STRUCTURE_BLOCK, LIGHT, DEBUG_STICK]
+
+boss:
+  health: 750
+  # 1.0 = normal size
+  size: 1.6
+  damage: 12
+  storm-damage: 6
+  slam-damage: 9
+  # Seconds between her attacks (normal / below half health)
+  attack-seconds: 8
+  attack-seconds-enraged: 5
+  # She leaves if nobody kills her in this many minutes
+  escape-minutes: 20
+  xp: 1500
+  # Sakura Sigils only work in these worlds, and this far from world spawn
+  summon-worlds: [world]
+  min-distance-from-spawn: 150
+  # You need at least this % of the total damage to get rewards
+  min-damage-percent: 5
+  # Chance (%) the top damager gets the Petal Reaper
+  reaper-chance: 35
+  # Chance (%) each helper gets a Sakura Sigil
+  sigil-chance: 10
+  rewards:
+    participant:
+      money: 2500
+      petals: 300
+      points: 50
+    top-damager:
+      money: 5000
+      petals: 500
+      points: 100
+  # 3D model (needs the BetterModel plugin and sakura_queen.bbmodel in plugins/BetterModel/models/).
+  # Without BetterModel she uses her normal pink-armour look.
+  model:
+    enabled: true
+    name: sakura_queen
+  # She can wake up by herself every few hours at one spot (/bq boss setspot)
+  auto-spawn:
+    enabled: false
+    every-minutes: 180
+    min-players: 3
+    world: world
+    x: 0
+    y: 80
+    z: 0
+
+items:
+  reaper:
+    sharpness: 5
+    dash-cooldown-seconds: 12
+    dash-damage: 6
+    dash-power: 1.6
+    # % chance on hit to give Wither for 3 seconds
+    wither-chance: 15
+    # For a resource pack texture. 0 = normal netherite sword look
+    custom-model-data: 0
+  sigil:
+    custom-model-data: 0
