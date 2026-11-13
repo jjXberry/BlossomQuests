@@ -5,6 +5,8 @@
 # (change how many in config.yml). Add, remove or change quests here, then /bq reload.
 #
 # type:   MINE, PLACE, KILL, KILL_PLAYER, FISH, CRAFT, BREED, PLAYTIME (minutes), BOSS (Sakura Warden)
+#         From BlossomBiomes: DISCOVER (target: a biome like MOONLIGHT_GARDEN), GATHER (target: a material
+#         like SAKURA_PETAL), BIOME_BOSS (target: RONIN, BRAMBLEHORN, MOON_SORCERESS, EMERALD_WARLORD, FROSTMAW)
 # target: ANY, a list of blocks/items/mobs like [DIAMOND_ORE, DEEPSLATE_DIAMOND_ORE],
 #         or HOSTILE for any hostile mob (KILL only)
 # description: (optional) your own text. Without it, one is made for you ("Mine 5 Diamond Ore").
@@ -12,6 +14,9 @@
 #          commands: ["say %player% is awesome"]
 #
 # Blocks players placed themselves don't count for MINE quests.
+
+# Don't change this line: it's how new default quests get added to your file after updates.
+defaults-version: 2
 
 daily:
   diamond_hunter:
@@ -204,6 +209,17 @@ daily:
       money: 1000
       petals: 100
       points: 20
+  biome_gatherer:
+    name: "Blossom Gatherer"
+    icon: PINK_DYE
+    description: "Gather 24 materials in the Blossom biomes"
+    type: GATHER
+    target: ANY
+    amount: 24
+    rewards:
+      money: 800
+      petals: 80
+      points: 15
 
 weekly:
   diamond_rush:
@@ -337,10 +353,35 @@ weekly:
       petals: 600
       points: 150
 
+  biome_hunter:
+    name: "Biome Hunter"
+    icon: IRON_SWORD
+    description: "Help defeat any biome boss"
+    type: BIOME_BOSS
+    target: ANY
+    amount: 1
+    rewards:
+      money: 8000
+      petals: 400
+      points: 80
+  blossom_harvest:
+    name: "Blossom Harvest"
+    icon: HONEYCOMB
+    description: "Gather 160 materials in the Blossom biomes"
+    type: GATHER
+    target: ANY
+    amount: 160
+    rewards:
+      money: 7000
+      petals: 350
+      points: 70
+
 # ============================================
 # Achievements: one-time goals. counter can be:
 # mine, place, kill_mob, kill_player, fish, craft, breed, playtime (minutes),
 # boss (any boss kill), boss_sakura, boss_ember, boss_frost, quests (quests finished), board (Quest Board deliveries)
+# From BlossomBiomes: biome_discover (biomes found), biome_discover_<biome>, biome_gather (materials gathered),
+# biome_gather_<material>, biome_boss (biome bosses beaten), biome_boss_<boss>
 # ============================================
 achievements:
   first_steps:
@@ -587,3 +628,123 @@ achievements:
       money: 3000
       petals: 200
       points: 40
+  off_the_map:
+    name: "Off the Map"
+    description: "Discover your first Blossom biome"
+    icon: FILLED_MAP
+    counter: biome_discover
+    goal: 1
+    rewards:
+      money: 2000
+      petals: 150
+      points: 25
+  holy_ground:
+    name: "Holy Ground"
+    description: "Find an Ancient Blossom Sanctuary"
+    icon: NETHER_STAR
+    counter: biome_discover_ancient_blossom_sanctuary
+    goal: 1
+    rewards:
+      money: 8000
+      petals: 500
+      points: 100
+  blossom_explorer:
+    name: "Blossom Explorer"
+    description: "Discover all six Blossom biomes"
+    icon: COMPASS
+    counter: biome_discover
+    goal: 6
+    rewards:
+      money: 20000
+      petals: 1500
+      points: 250
+  beast_tamer:
+    name: "Beast Tamer"
+    description: "Help defeat your first biome boss"
+    icon: IRON_SWORD
+    counter: biome_boss
+    goal: 1
+    rewards:
+      money: 4000
+      petals: 250
+      points: 50
+  legend_of_the_wilds:
+    name: "Legend of the Wilds"
+    description: "Help defeat biome bosses 25 times"
+    icon: DIAMOND_SWORD
+    counter: biome_boss
+    goal: 25
+    rewards:
+      money: 40000
+      petals: 2000
+      points: 400
+  petalfall:
+    name: "Petalfall"
+    description: "Help defeat the Ronin of Falling Petals"
+    icon: CHERRY_SAPLING
+    counter: biome_boss_ronin
+    goal: 1
+    rewards:
+      money: 3000
+      petals: 200
+      points: 40
+  thorn_in_the_side:
+    name: "Thorn in the Side"
+    description: "Help defeat Bramblehorn"
+    icon: HAY_BLOCK
+    counter: biome_boss_bramblehorn
+    goal: 1
+    rewards:
+      money: 3000
+      petals: 200
+      points: 40
+  moonset:
+    name: "Moonset"
+    description: "Help defeat the Moonlit Sorceress"
+    icon: END_ROD
+    counter: biome_boss_moon_sorceress
+    goal: 1
+    rewards:
+      money: 3000
+      petals: 200
+      points: 40
+  warlords_end:
+    name: "Warlord's End"
+    description: "Help defeat the Emerald Warlord"
+    icon: IRON_AXE
+    counter: biome_boss_emerald_warlord
+    goal: 1
+    rewards:
+      money: 3000
+      petals: 200
+      points: 40
+  the_thaw:
+    name: "The Thaw"
+    description: "Help defeat Frostmaw"
+    icon: BLUE_ICE
+    counter: biome_boss_frostmaw
+    goal: 1
+    rewards:
+      money: 3000
+      petals: 200
+      points: 40
+  gatherer:
+    name: "Gatherer"
+    description: "Gather 250 Blossom materials"
+    icon: PINK_DYE
+    counter: biome_gather
+    goal: 250
+    rewards:
+      money: 5000
+      petals: 300
+      points: 60
+  hoarder:
+    name: "Hoarder"
+    description: "Gather 2,500 Blossom materials"
+    icon: CHEST
+    counter: biome_gather
+    goal: 2500
+    rewards:
+      money: 25000
+      petals: 1500
+      points: 250

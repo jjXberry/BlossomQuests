@@ -47,6 +47,7 @@ public class QuestManager {
             plugin.saveResource("quests.yml", false);
         }
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+        addNewDefaults(yaml, file);
         daily.clear();
         weekly.clear();
         achievements.clear();
@@ -74,6 +75,59 @@ public class QuestManager {
                 + achievements.size() + " achievements.");
     }
 
+    /** Bumped when new quests are added to the default quests.yml. */
+    private static final int DEFAULTS_VERSION = 2;
+    /** Quests and achievements added in 1.1.0 (the Blossom biomes ones). */
+    private static final List<String> NEW_IN_2 = List.of("biome_gatherer", "biome_hunter", "blossom_harvest",
+            "off_the_map", "holy_ground", "blossom_explorer", "beast_tamer", "legend_of_the_wilds", "petalfall",
+            "thorn_in_the_side", "moonset", "warlords_end", "the_thaw", "gatherer", "hoarder");
+
+    /**
+     * An existing quests.yml is never replaced, so new default quests are copied into it once
+     * (only ones that aren't there yet). Deleting one afterwards keeps it deleted.
+     */
+    private void addNewDefaults(YamlConfiguration yaml, File file) {
+        if (yaml.getInt("defaults-version", 1) >= DEFAULTS_VERSION) {
+            return;
+        }
+        java.io.InputStream in = plugin.getResource("quests.yml");
+        if (in == null) {
+            return;
+        }
+        YamlConfiguration defaults = YamlConfiguration.loadConfiguration(
+                new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8));
+        int added = 0;
+        for (String scope : List.of("daily", "weekly", "achievements")) {
+            for (String id : NEW_IN_2) {
+                ConfigurationSection quest = defaults.getConfigurationSection(scope + "." + id);
+                if (quest != null && !yaml.contains(scope + "." + id)) {
+                    copy(quest, yaml, scope + "." + id);
+                    added++;
+                }
+            }
+        }
+        yaml.set("defaults-version", DEFAULTS_VERSION);
+        try {
+            yaml.save(file);
+            if (added > 0) {
+                plugin.getLogger().info("Added " + added + " new Blossom biome quests and achievements to quests.yml.");
+            }
+        } catch (java.io.IOException e) {
+            plugin.getLogger().warning("Couldn't save the new quests to quests.yml: " + e.getMessage());
+        }
+    }
+
+    private static void copy(ConfigurationSection from, ConfigurationSection to, String path) {
+        for (String key : from.getKeys(false)) {
+            Object value = from.get(key);
+            if (value instanceof ConfigurationSection section) {
+                copy(section, to, path + "." + key);
+            } else {
+                to.set(path + "." + key, value);
+            }
+        }
+    }
+
     private void readQuests(ConfigurationSection root, String scope, Map<String, QuestDef> into) {
         if (root == null) {
             return;
@@ -88,7 +142,7 @@ public class QuestManager {
                 type = QuestType.valueOf(s.getString("type", "").toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {
                 plugin.getLogger().warning("Quest '" + id + "' has an unknown type: " + s.getString("type")
-                        + ". Use MINE, PLACE, KILL, KILL_PLAYER, FISH, CRAFT, BREED, PLAYTIME or BOSS.");
+                        + ". Use MINE, PLACE, KILL, KILL_PLAYER, FISH, CRAFT, BREED, PLAYTIME, BOSS, DISCOVER, GATHER or BIOME_BOSS.");
                 continue;
             }
             int amount = s.getInt("amount", 0);

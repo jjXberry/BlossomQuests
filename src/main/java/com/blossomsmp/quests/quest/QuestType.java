@@ -10,7 +10,13 @@ public enum QuestType {
     CRAFT("Craft", "craft"),
     BREED("Breed", "breed"),
     PLAYTIME("Play for", "playtime"),
-    BOSS("Defeat", "boss");
+    BOSS("Defeat", "boss"),
+    /** BlossomBiomes: walking into a Blossom biome for the first time (target = biome id) */
+    DISCOVER("Discover", "biome_discover"),
+    /** BlossomBiomes: picking up a biome material (target = material id) */
+    GATHER("Gather", "biome_gather"),
+    /** BlossomBiomes: helping beat a biome boss (target = boss id) */
+    BIOME_BOSS("Defeat", "biome_boss");
 
     private final String verb;
     private final String counter;

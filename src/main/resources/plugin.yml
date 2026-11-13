@@ -1,9 +1,9 @@
 name: BlossomQuests
-version: 1.0.0
+version: 1.1.0
 main: com.blossomsmp.quests.BlossomQuests
 api-version: '1.21'
 author: BlossomSMP
-description: Daily and weekly quests, achievements, a player Quest Board, the Sakura Warden boss and the Petal Reaper.
+description: Daily and weekly quests, achievements, a player Quest Board, bosses and legendary weapons. Counts Blossom biome progress too.
 softdepend: [Vault, PlaceholderAPI, BlossomEconomy, BlossomCore, BlossomToggles, BlossomSettings]
 
 commands:

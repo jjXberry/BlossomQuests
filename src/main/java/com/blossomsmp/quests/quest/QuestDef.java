@@ -34,6 +34,18 @@ public record QuestDef(String id, String scope, String name, List<String> descri
         if (type == QuestType.KILL_PLAYER) {
             return "Kill " + amount + " player" + (amount == 1 ? "" : "s");
         }
+        boolean any = targets.isEmpty() || targets.contains("ANY");
+        if (type == QuestType.DISCOVER) {
+            return any ? "Discover " + amount + " Blossom biome" + (amount == 1 ? "" : "s")
+                    : "Discover the " + pretty(targets.get(0));
+        }
+        if (type == QuestType.GATHER) {
+            return "Gather " + amount + " " + (any ? "Blossom materials" : pretty(targets.get(0)));
+        }
+        if (type == QuestType.BIOME_BOSS) {
+            return "Help defeat " + (any ? "any biome boss" : "the " + pretty(targets.get(0))) + " " + amount
+                    + " time" + (amount == 1 ? "" : "s");
+        }
         if (type == QuestType.BOSS) {
             String boss = targets.contains("SAKURA") ? "the Sakura Warden" : targets.contains("EMBER") ? "the Ember Tyrant"
                     : targets.contains("FROST") ? "the Frostbound King" : "any boss";

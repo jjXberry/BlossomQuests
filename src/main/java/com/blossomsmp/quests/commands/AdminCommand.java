@@ -82,6 +82,7 @@ public class AdminCommand implements TabExecutor {
                 plugin.getQuests().reroll(data);
                 send(sender, "&a" + target.getName() + " got new daily and weekly quests.");
             }
+            case "progress" -> progress(sender, args);
             case "save" -> {
                 plugin.getData().saveAll();
                 plugin.getBoard().save();
@@ -95,10 +96,46 @@ public class AdminCommand implements TabExecutor {
                 send(sender, "&f/bq boss setspot &7- where a random boss auto-spawns");
                 send(sender, "&f/bq give <player> <reaper|cleaver|frostfang|sigil|ember_sigil|frost_sigil> [amount]");
                 send(sender, "&f/bq reset <player> &7- new quests for that player");
+                send(sender, "&f/bq progress <player> <type> <target> [amount] &7- count quest progress (used by BlossomBiomes)");
                 send(sender, "&f/bq save");
             }
         }
         return true;
+    }
+
+    /**
+     * /bq progress <player> <type> <target> [amount]
+     * Used by other Blossom plugins (BlossomBiomes) to count quest progress. Silent when it works.
+     */
+    private void progress(CommandSender sender, String[] args) {
+        if (args.length < 4) {
+            send(sender, "&cUse: /bq progress <player> <DISCOVER|GATHER|BIOME_BOSS|...> <target> [amount]");
+            return;
+        }
+        Player target = Bukkit.getPlayerExact(args[1]);
+        if (target == null) {
+            return; // they logged off: nothing to count
+        }
+        com.blossomsmp.quests.quest.QuestType type;
+        try {
+            type = com.blossomsmp.quests.quest.QuestType.valueOf(args[2].toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            send(sender, "&cUnknown quest type: " + args[2]);
+            return;
+        }
+        int amount = 1;
+        if (args.length > 4) {
+            try {
+                amount = Math.max(1, Math.min(10_000, Integer.parseInt(args[4])));
+            } catch (NumberFormatException ignored) {
+                amount = 1;
+            }
+        }
+        String what = args[3].toUpperCase(Locale.ROOT);
+        plugin.getQuests().progress(target, type, what, false, amount);
+        // per-target stat too, for achievements like "beat the Frostmaw" (counter: biome_boss_frostmaw)
+        plugin.getQuests().addCounter(target, plugin.getData().get(target),
+                type.counter() + "_" + what.toLowerCase(Locale.ROOT), amount);
     }
 
     private void boss(CommandSender sender, String[] args) {
@@ -151,7 +188,7 @@ public class AdminCommand implements TabExecutor {
             return options;
         }
         if (args.length == 1) {
-            options.addAll(List.of("reload", "boss", "give", "reset", "save"));
+            options.addAll(List.of("reload", "boss", "give", "reset", "progress", "save"));
         } else if (args.length == 2 && args[0].equalsIgnoreCase("boss")) {
             options.addAll(List.of("spawn", "kill", "setspot"));
         } else if (args.length == 2 && (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("reset"))) {
