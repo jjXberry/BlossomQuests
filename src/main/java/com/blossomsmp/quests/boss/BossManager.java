@@ -208,13 +208,16 @@ public class BossManager implements Listener {
         world.strikeLightningEffect(location);
         world.spawnParticle(type.ambientParticle(), location.clone().add(0, 1.5, 0), 200, 2, 2, 2, 0.02);
         for (Player p : Bukkit.getOnlinePlayers()) {
-            p.playSound(p.getLocation(), Sound.ENTITY_WITHER_SPAWN, 0.6f, 1.3f);
+            if (sounds()) {
+                p.playSound(p.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1f, 1f);
+            }
             p.showTitle(Title.title(Text.component(type.name()),
                     Text.component("&7has awoken at &f" + where(location))));
         }
         Bukkit.broadcast(plugin.msg(type.color() + "&lThe " + type.plainName() + " has awoken! &7(" + where(location)
                 + (by == null ? "" : ", summoned by " + by) + ")"));
         Bukkit.broadcast(plugin.msg("&7Everyone who helps gets rewards. The best fighter might get a &c&llegendary weapon&7!"));
+        updateViewers(boss);
         return true;
     }
 
@@ -325,6 +328,10 @@ public class BossManager implements Listener {
 
         Location at = boss.entity.getLocation();
         at.getWorld().spawnParticle(type.ambientParticle(), at.clone().add(0, 1.5, 0), 10, 0.7, 1, 0.7, 0.01);
+        // Wither growls during the fight
+        if (sounds() && boss.seconds % 6 == 0) {
+            at.getWorld().playSound(at, Sound.ENTITY_WITHER_AMBIENT, 2.5f, 0.9f);
+        }
 
         if (!boss.enraged && health <= max / 2) {
             boss.enraged = true;
@@ -335,7 +342,10 @@ public class BossManager implements Listener {
             }
             setAttribute(boss.entity, Attribute.ATTACK_DAMAGE, type.cfg("damage", 12) * 1.3);
             for (Player p : nearby(boss, 60)) {
-                p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1.4f);
+                if (sounds()) {
+                    p.playSound(p.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1f, 0.7f);
+                    p.playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1.4f);
+                }
                 p.showTitle(Title.title(Text.component("&c&lENRAGED"),
                         Text.component("&7The " + type.plainName() + " is furious!")));
             }
@@ -370,9 +380,29 @@ public class BossManager implements Listener {
         return list;
     }
 
+    private boolean sounds() {
+        return plugin.getConfig().getBoolean("boss-settings.wither-sounds", true);
+    }
+
+    /** Who sees the boss bar: everyone online, or every player (any game mode) within bar-range blocks. */
+    private List<Player> barViewers(ActiveBoss boss) {
+        if (plugin.getConfig().getBoolean("boss-settings.boss-bar-for-everyone", false)) {
+            return new ArrayList<>(Bukkit.getOnlinePlayers());
+        }
+        double range = plugin.getConfig().getDouble("boss-settings.boss-bar-range", 80);
+        Location at = boss.entity.getLocation();
+        List<Player> list = new ArrayList<>();
+        for (Player p : at.getWorld().getPlayers()) {
+            if (p.getLocation().distanceSquared(at) <= range * range) {
+                list.add(p);
+            }
+        }
+        return list;
+    }
+
     private void updateViewers(ActiveBoss boss) {
         Set<UUID> now = new HashSet<>();
-        for (Player p : nearby(boss, 50)) {
+        for (Player p : barViewers(boss)) {
             now.add(p.getUniqueId());
             if (boss.viewers.add(p.getUniqueId())) {
                 p.showBossBar(boss.bar);
@@ -472,6 +502,11 @@ public class BossManager implements Listener {
         event.setDroppedExp(boss.type.cfgInt("xp", 1500));
         Location at = dead.getLocation();
         reward(boss);
+        if (sounds()) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                p.playSound(p.getLocation(), Sound.ENTITY_WITHER_DEATH, 0.8f, 1f);
+            }
+        }
         at.getWorld().strikeLightningEffect(at);
         at.getWorld().spawnParticle(boss.type.ambientParticle(), at.clone().add(0, 1, 0), 400, 3, 3, 3, 0.1);
         end(boss);
