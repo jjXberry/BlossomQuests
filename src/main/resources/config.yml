@@ -50,6 +50,12 @@ boss-settings:
   min-damage-percent: 5
   # Items floating and spinning around bosses (petals, blaze powder, ice)
   orbit-effects: true
+  # Wither sounds: when a boss spawns, growls during the fight, when it's enraged and when it dies
+  wither-sounds: true
+  # The boss bar shows for every player this close to the boss (any game mode)
+  boss-bar-range: 80
+  # true = every player online sees the boss bar, wherever they are
+  boss-bar-for-everyone: false
   # A random boss wakes up by itself every few hours at one spot (/bq boss setspot)
   auto-spawn:
     enabled: false
