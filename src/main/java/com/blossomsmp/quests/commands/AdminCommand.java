@@ -1,6 +1,7 @@
 package com.blossomsmp.quests.commands;
 
 import com.blossomsmp.quests.BlossomQuests;
+import com.blossomsmp.quests.boss.BossType;
 import com.blossomsmp.quests.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -43,7 +44,7 @@ public class AdminCommand implements TabExecutor {
             case "boss" -> boss(sender, args);
             case "give" -> {
                 if (args.length < 3) {
-                    send(sender, "&cUse: /bq give <player> <reaper|sigil> [amount]");
+                    send(sender, "&cUse: /bq give <player> <item> [amount]  &7Items: reaper, cleaver, frostfang, sigil, ember_sigil, frost_sigil");
                     return true;
                 }
                 Player target = Bukkit.getPlayerExact(args[1]);
@@ -61,7 +62,7 @@ public class AdminCommand implements TabExecutor {
                 }
                 ItemStack item = plugin.getRewards().parseItem(args[2] + ":" + amount);
                 if (item == null) {
-                    send(sender, "&cUnknown item. Use reaper or sigil.");
+                    send(sender, "&cUnknown item. Use reaper, cleaver, frostfang, sigil, ember_sigil or frost_sigil.");
                     return true;
                 }
                 plugin.getRewards().giveItem(target, item);
@@ -89,10 +90,10 @@ public class AdminCommand implements TabExecutor {
             default -> {
                 send(sender, "&#FF69B4&lBlossomQuests staff commands:");
                 send(sender, "&f/bq reload &7- reload config.yml and quests.yml");
-                send(sender, "&f/bq boss spawn &7- spawn the Sakura Warden where you stand");
-                send(sender, "&f/bq boss kill &7- remove her (no rewards)");
-                send(sender, "&f/bq boss setspot &7- where she auto-spawns");
-                send(sender, "&f/bq give <player> <reaper|sigil> [amount]");
+                send(sender, "&f/bq boss spawn <sakura|ember|frost> &7- spawn a boss where you stand");
+                send(sender, "&f/bq boss kill [sakura|ember|frost|all] &7- remove bosses (no rewards)");
+                send(sender, "&f/bq boss setspot &7- where a random boss auto-spawns");
+                send(sender, "&f/bq give <player> <reaper|cleaver|frostfang|sigil|ember_sigil|frost_sigil> [amount]");
                 send(sender, "&f/bq reset <player> &7- new quests for that player");
                 send(sender, "&f/bq save");
             }
@@ -102,23 +103,29 @@ public class AdminCommand implements TabExecutor {
 
     private void boss(CommandSender sender, String[] args) {
         String what = args.length > 1 ? args[1].toLowerCase(Locale.ROOT) : "";
+        String which = args.length > 2 ? args[2].toLowerCase(Locale.ROOT) : "";
         switch (what) {
             case "spawn" -> {
                 if (!(sender instanceof Player player)) {
-                    send(sender, "&cStand where she should spawn and run this in game.");
+                    send(sender, "&cStand where the boss should spawn and run this in game.");
                     return;
                 }
-                if (plugin.getBoss().isAlive()) {
-                    send(sender, "&cShe's already awake. /bq boss kill first.");
+                BossType type = plugin.getBoss().type(which.isEmpty() ? "sakura" : which);
+                if (type == null) {
+                    send(sender, "&cUse: /bq boss spawn <sakura|ember|frost>");
                     return;
                 }
-                if (!plugin.getBoss().spawn(player.getLocation(), null)) {
-                    send(sender, "&cShe couldn't spawn here (check the console).");
+                if (plugin.getBoss().active(type.id()) != null) {
+                    send(sender, "&cThe " + type.plainName() + " is already awake. /bq boss kill " + type.id() + " first.");
+                    return;
+                }
+                if (!plugin.getBoss().spawn(type, player.getLocation(), null)) {
+                    send(sender, "&cIt couldn't spawn here (check the console).");
                 }
             }
             case "kill", "remove" -> {
-                plugin.getBoss().despawn();
-                send(sender, "&aThe Sakura Warden was removed.");
+                int removed = plugin.getBoss().despawn(which.isEmpty() || which.equals("all") ? null : which);
+                send(sender, removed > 0 ? "&aRemoved " + removed + " boss(es)." : "&7No boss to remove.");
             }
             case "setspot" -> {
                 if (!(sender instanceof Player player)) {
@@ -126,14 +133,14 @@ public class AdminCommand implements TabExecutor {
                     return;
                 }
                 Location l = player.getLocation();
-                plugin.getConfig().set("boss.auto-spawn.world", l.getWorld().getName());
-                plugin.getConfig().set("boss.auto-spawn.x", l.getBlockX() + 0.5);
-                plugin.getConfig().set("boss.auto-spawn.y", l.getBlockY());
-                plugin.getConfig().set("boss.auto-spawn.z", l.getBlockZ() + 0.5);
+                plugin.getConfig().set("boss-settings.auto-spawn.world", l.getWorld().getName());
+                plugin.getConfig().set("boss-settings.auto-spawn.x", l.getBlockX() + 0.5);
+                plugin.getConfig().set("boss-settings.auto-spawn.y", l.getBlockY());
+                plugin.getConfig().set("boss-settings.auto-spawn.z", l.getBlockZ() + 0.5);
                 plugin.saveConfig();
-                send(sender, "&aAuto-spawn spot saved. Turn it on with &fboss.auto-spawn.enabled: true &ain config.yml, then /bq reload.");
+                send(sender, "&aAuto-spawn spot saved. Turn it on with &fboss-settings.auto-spawn.enabled: true &ain config.yml, then /bq reload.");
             }
-            default -> send(sender, "&cUse: /bq boss <spawn|kill|setspot>");
+            default -> send(sender, "&cUse: /bq boss <spawn|kill|setspot> [sakura|ember|frost]");
         }
     }
 
@@ -152,7 +159,12 @@ public class AdminCommand implements TabExecutor {
                 options.add(p.getName());
             }
         } else if (args.length == 3 && args[0].equalsIgnoreCase("give")) {
-            options.addAll(List.of("reaper", "sigil"));
+            options.addAll(List.of("reaper", "cleaver", "frostfang", "sigil", "ember_sigil", "frost_sigil"));
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("boss")) {
+            options.addAll(List.of("sakura", "ember", "frost"));
+            if (args[1].equalsIgnoreCase("kill")) {
+                options.add("all");
+            }
         }
         String last = args.length == 0 ? "" : args[args.length - 1].toLowerCase(Locale.ROOT);
         options.removeIf(o -> !o.toLowerCase(Locale.ROOT).startsWith(last));

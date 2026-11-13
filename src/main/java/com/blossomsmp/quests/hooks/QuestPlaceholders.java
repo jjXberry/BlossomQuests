@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
  * %blossomquests_achievements%    5/20
  * %blossomquests_boss_kills%      Sakura Warden kills
  * %blossomquests_boss_status%     Awake! / Sleeping
+ * %blossomquests_boss_name%       which bosses are awake
  */
 public class QuestPlaceholders extends PlaceholderExpansion {
 
@@ -50,6 +51,16 @@ public class QuestPlaceholders extends PlaceholderExpansion {
             if (params.equalsIgnoreCase("boss_status")) {
                 return plugin.getBoss().isAlive() ? "&c&lAwake!" : "&7Sleeping";
             }
+            if (params.equalsIgnoreCase("boss_name")) {
+                StringBuilder names = new StringBuilder();
+                for (var boss : plugin.getBoss().alive()) {
+                    if (names.length() > 0) {
+                        names.append("&7, ");
+                    }
+                    names.append(boss.type.color()).append(boss.type.plainName());
+                }
+                return names.length() == 0 ? "&7None" : names.toString();
+            }
             if (!(player instanceof Player online)) {
                 return "";
             }
@@ -64,6 +75,9 @@ public class QuestPlaceholders extends PlaceholderExpansion {
                 case "completed" -> String.valueOf(data.counter("quests"));
                 case "achievements" -> data.achievements.size() + "/" + plugin.getQuests().achievements().size();
                 case "boss_kills" -> String.valueOf(data.counter("boss"));
+                case "boss_kills_sakura" -> String.valueOf(data.counter("boss_sakura"));
+                case "boss_kills_ember" -> String.valueOf(data.counter("boss_ember"));
+                case "boss_kills_frost" -> String.valueOf(data.counter("boss_frost"));
                 default -> null;
             };
         } catch (Exception e) {

@@ -39,38 +39,18 @@ board:
   announce: true
   banned-items: [BEDROCK, BARRIER, COMMAND_BLOCK, SPAWNER, STRUCTURE_BLOCK, LIGHT, DEBUG_STICK]
 
-boss:
-  health: 750
-  # 1.0 = normal size
-  size: 1.6
-  damage: 12
-  storm-damage: 6
-  slam-damage: 9
-  # Seconds between her attacks (normal / below half health)
-  attack-seconds: 8
-  attack-seconds-enraged: 5
-  # She leaves if nobody kills her in this many minutes
-  escape-minutes: 20
-  xp: 1500
-  # Sakura Sigils only work in these worlds, and this far from world spawn
+# ============================================
+# Bosses
+# ============================================
+boss-settings:
+  # Sigils only work in these worlds, and this far from world spawn
   summon-worlds: [world]
   min-distance-from-spawn: 150
   # You need at least this % of the total damage to get rewards
   min-damage-percent: 5
-  # Chance (%) the top damager gets the Petal Reaper
-  reaper-chance: 35
-  # Chance (%) each helper gets a Sakura Sigil
-  sigil-chance: 10
-  rewards:
-    participant:
-      money: 2500
-      petals: 300
-      points: 50
-    top-damager:
-      money: 5000
-      petals: 500
-      points: 100
-  # She can wake up by herself every few hours at one spot (/bq boss setspot)
+  # Items floating and spinning around bosses (petals, blaze powder, ice)
+  orbit-effects: true
+  # A random boss wakes up by itself every few hours at one spot (/bq boss setspot)
   auto-spawn:
     enabled: false
     every-minutes: 180
@@ -80,15 +60,129 @@ boss:
     y: 80
     z: 0
 
+bosses:
+  sakura:
+    enabled: true
+    health: 750
+    # 1.0 = normal size
+    size: 1.6
+    damage: 12
+    storm-damage: 6
+    slam-damage: 9
+    # Seconds between attacks (normal / below half health)
+    attack-seconds: 8
+    attack-seconds-enraged: 5
+    # It leaves if nobody kills it in this many minutes
+    escape-minutes: 20
+    xp: 1500
+    # Chance (%) the top damager gets the Petal Reaper
+    weapon-chance: 35
+    # Chance (%) each helper gets a Sakura Sigil
+    sigil-chance: 10
+    rewards:
+      participant:
+        money: 2500
+        petals: 300
+        points: 50
+      top-damager:
+        money: 5000
+        petals: 500
+        points: 100
+    # 3D model (needs BetterModel + sakura_queen.bbmodel). Without it she uses her armour look.
+    model:
+      enabled: true
+      name: sakura_queen
+  ember:
+    enabled: true
+    health: 850
+    size: 1.7
+    damage: 14
+    meteor-damage: 8
+    ring-damage: 6
+    charge-damage: 8
+    eruption-damage: 6
+    attack-seconds: 7
+    attack-seconds-enraged: 4
+    escape-minutes: 20
+    xp: 1750
+    # Chance (%) the top damager gets the Infernal Cleaver
+    weapon-chance: 35
+    sigil-chance: 10
+    rewards:
+      participant:
+        money: 3000
+        petals: 350
+        points: 60
+      top-damager:
+        money: 6000
+        petals: 600
+        points: 120
+  frost:
+    enabled: true
+    health: 800
+    size: 1.7
+    damage: 10
+    blizzard-damage: 4
+    prison-damage: 5
+    icicle-damage: 7
+    attack-seconds: 7
+    attack-seconds-enraged: 4
+    escape-minutes: 20
+    xp: 1750
+    # Chance (%) the top damager gets Frostfang
+    weapon-chance: 35
+    sigil-chance: 10
+    rewards:
+      participant:
+        money: 3000
+        petals: 350
+        points: 60
+      top-damager:
+        money: 6000
+        petals: 600
+        points: 120
+
+# ============================================
+# Legendary weapons (cooldowns in seconds)
+# custom-model-data: for a resource pack texture. 0 = normal look
+# ============================================
 items:
-  reaper:
+  petal_reaper:
     sharpness: 5
-    dash-cooldown-seconds: 12
+    dash-cooldown: 12
     dash-damage: 6
     dash-power: 1.6
-    # % chance on hit to give Wither for 3 seconds
+    storm-cooldown: 20
+    storm-damage: 5
+    bolt-cooldown: 6
+    bolt-damage: 7
+    bolt-range: 20
     wither-chance: 15
-    # For a resource pack texture. 0 = normal netherite sword look
     custom-model-data: 0
-  sigil:
+  infernal_cleaver:
+    sharpness: 5
+    fireball-cooldown: 8
+    fireball-damage: 7
+    fireball-range: 22
+    ring-cooldown: 18
+    ring-damage: 6
+    slash-cooldown: 7
+    slash-damage: 6
+    custom-model-data: 0
+  frostfang:
+    sharpness: 5
+    shard-cooldown: 7
+    shard-damage: 6
+    shard-range: 22
+    nova-cooldown: 18
+    nova-damage: 4
+    blink-cooldown: 10
+    blink-distance: 8
+    freeze-chance: 20
+    custom-model-data: 0
+  sakura_sigil:
+    custom-model-data: 0
+  ember_sigil:
+    custom-model-data: 0
+  frost_sigil:
     custom-model-data: 0

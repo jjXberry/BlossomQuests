@@ -1,7 +1,6 @@
 package com.blossomsmp.quests.quest;
 
 import com.blossomsmp.quests.BlossomQuests;
-import com.blossomsmp.quests.items.CustomItems;
 import com.blossomsmp.quests.util.Text;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -117,14 +116,12 @@ public class RewardService {
             }
         }
         String id = parts[0].trim();
-        CustomItems items = plugin.getItems();
-        if (id.equalsIgnoreCase("reaper")) {
-            return items.reaper();
-        }
-        if (id.equalsIgnoreCase("sigil")) {
-            ItemStack sigil = items.sigil();
-            sigil.setAmount(Math.min(amount, 64));
-            return sigil;
+        ItemStack custom = plugin.getItems().create(id);
+        if (custom != null) {
+            if (plugin.getItems().weaponOf(custom) == null) {
+                custom.setAmount(Math.min(amount, 64));
+            }
+            return custom;
         }
         Material material = Material.matchMaterial(id);
         if (material == null || !material.isItem()) {
@@ -158,10 +155,8 @@ public class RewardService {
             String[] parts = entry.split(":");
             String amount = parts.length > 1 ? parts[1].trim() + "x " : "";
             String id = parts[0].trim();
-            if (id.equalsIgnoreCase("reaper")) {
-                lines.add("&c&l" + amount + "Petal Reaper");
-            } else if (id.equalsIgnoreCase("sigil")) {
-                lines.add("&5" + amount + "Sakura Sigil");
+            if (plugin.getItems().resolve(id) != null) {
+                lines.add("&f" + amount + plugin.getItems().displayName(id));
             } else {
                 lines.add("&f" + amount + QuestDef.pretty(id));
             }

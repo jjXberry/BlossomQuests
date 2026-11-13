@@ -2,6 +2,8 @@ package com.blossomsmp.quests.menus;
 
 import com.blossomsmp.quests.BlossomQuests;
 import com.blossomsmp.quests.board.BoardManager;
+import com.blossomsmp.quests.boss.ActiveBoss;
+import com.blossomsmp.quests.boss.BossType;
 import com.blossomsmp.quests.data.PlayerData;
 import com.blossomsmp.quests.quest.AchievementDef;
 import com.blossomsmp.quests.quest.QuestDef;
@@ -10,7 +12,6 @@ import com.blossomsmp.quests.util.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -200,10 +201,10 @@ public class Menus {
                 mail > 0 ? "&a&lYou have " + mail + " delivered items!" : "", "",
                 CLICK + "Click to open"), mail > 0), p -> openBoard(p, 0));
 
-        h.set(24, item(Material.WITHER_SKELETON_SKULL, "&#FF1493&l❀ Sakura Warden",
-                "&7The boss of Blossom SMP.", "",
-                plugin.getBoss().isAlive() ? "&c&lAWAKE NOW!" : "&7Sleeping...", "",
-                CLICK + "Click for info"), this::openBoss);
+        h.set(24, glow(item(Material.WITHER_SKELETON_SKULL, "&#FF1493&l☠ Bosses",
+                "&#FF69B4❀ Sakura Warden", "&#FF6A00✹ Ember Tyrant", "&#7FDBFF❄ Frostbound King", "",
+                plugin.getBoss().isAlive() ? "&c&lA boss is AWAKE!" : "&7All sleeping...", "",
+                CLICK + "Click for info"), plugin.getBoss().isAlive()), this::openBoss);
 
         h.set(40, item(Material.BARRIER, "&c&lClose"), Player::closeInventory);
         open(player, h);
@@ -433,41 +434,71 @@ public class Menus {
     // ------------------------------------------------------------------
 
     public void openBoss(Player player) {
-        MenuHolder h = create(4, TITLE + "Sakura Warden");
-        LivingEntity boss = plugin.getBoss().boss();
-        if (boss != null) {
-            Location l = boss.getLocation();
-            h.set(13, glow(item(Material.WITHER_SKELETON_SKULL, "&c&l❀ The Sakura Warden is AWAKE!",
-                    "&7Location: &f" + l.getWorld().getName() + " " + l.getBlockX() + ", " + l.getBlockY() + ", "
-                            + l.getBlockZ(),
-                    "&7Health: &c" + (int) Math.ceil(boss.getHealth()) + " ❤", "",
-                    "&7Go fight her for rewards!"), true), null);
-        } else {
-            long next = plugin.getBoss().nextAutoSpawn();
-            h.set(13, item(Material.SKELETON_SKULL, "&#FF69B4&l❀ The Sakura Warden sleeps",
-                    next > 0 ? "&7She wakes up in about &f" + time(Math.max(0, (next - System.currentTimeMillis()) / 1000))
-                            : "&7Summon her with a &dSakura Sigil&7.",
-                    "&7(right-click the ground with it)"), null);
+        MenuHolder h = create(4, TITLE + "Bosses");
+        int[] slots = {11, 13, 15};
+        int i = 0;
+        for (BossType type : plugin.getBoss().types()) {
+            if (i >= slots.length) {
+                break;
+            }
+            ActiveBoss boss = plugin.getBoss().active(type.id());
+            List<String> lore = new ArrayList<>();
+            if (boss != null) {
+                Location l = boss.entity.getLocation();
+                lore.add("&c&lAWAKE NOW!");
+                lore.add("&7Location: &f" + l.getWorld().getName() + " " + l.getBlockX() + ", " + l.getBlockY()
+                        + ", " + l.getBlockZ());
+                lore.add("&7Health: &c" + (int) Math.ceil(boss.entity.getHealth()) + " ❤");
+            } else if (!type.enabled()) {
+                lore.add("&8Turned off on this server");
+            } else {
+                lore.add("&7Sleeping...");
+                lore.add("&7Summon with a " + plugin.getItems().displayName(type.sigilId()));
+            }
+            lore.add("");
+            lore.add("&7Drops: " + plugin.getItems().displayName(type.weaponId()));
+            lore.add("");
+            lore.add(CLICK + "Click for attacks, rewards and drops");
+            h.set(slots[i], glow(item(type.icon(), type.name(), lore), boss != null), p -> openBossInfo(p, type));
+            i++;
         }
-        h.set(10, item(Material.PINK_PETALS, "&#FF69B4&lHer attacks",
-                "&d• Petal Storm &7- hurts and slows everyone close",
-                "&d• Thornlings &7- calls pink zombie helpers",
-                "&d• Blossom Leap &7- jumps at the furthest player",
-                "&5• Wither Bloom &7- only when enraged (below half health)"), null);
-        h.set(11, item(Material.GOLD_INGOT, "&6&lRewards",
-                "&7Everyone who does at least &f" + (int) plugin.getConfig().getDouble("boss.min-damage-percent", 5)
-                        + "% &7of the damage gets:",
-                " &8• " + String.join("&8, ", plugin.getRewards().describe(
-                        com.blossomsmp.quests.quest.Reward.from(plugin.getConfig()
-                                .getConfigurationSection("boss.rewards.participant")))),
-                "",
-                "&7The &6top damager &7also gets a bonus and a",
-                "&f" + plugin.getConfig().getInt("boss.reaper-chance", 35) + "% &7chance at the &c&lPetal Reaper&7.",
-                "&7Everyone has a &f" + plugin.getConfig().getInt("boss.sigil-chance", 10)
-                        + "% &7chance at a &dSakura Sigil&7."), null);
-        h.set(15, plugin.getItems().reaper(), null);
-        h.set(16, plugin.getItems().sigil(), null);
+        long next = plugin.getBoss().nextAutoSpawn();
+        if (next > 0 && !plugin.getBoss().isAlive()) {
+            h.set(31, item(Material.CLOCK, "&7A random boss wakes up in about &f"
+                    + time(Math.max(0, (next - System.currentTimeMillis()) / 1000))), null);
+        }
         h.set(27, back(), this::openMain);
+        open(player, h);
+    }
+
+    public void openBossInfo(Player player, BossType type) {
+        MenuHolder h = create(4, TITLE + type.plainName());
+        List<String> attacks = new ArrayList<>(type.attackLore());
+        attacks.add("");
+        attacks.add("&7Below half health it becomes &c&lENRAGED&7:");
+        attacks.add("&7faster, stronger and attacks more often.");
+        h.set(10, item(type.icon(), type.color() + "&lAttacks", attacks), null);
+        double minPercent = plugin.getConfig().getDouble("boss-settings.min-damage-percent", 5);
+        String base = "bosses." + type.id() + ".rewards.";
+        List<String> rewards = new ArrayList<>();
+        rewards.add("&7Everyone who does at least &f" + (int) minPercent + "% &7of the damage gets:");
+        for (String line : plugin.getRewards().describe(com.blossomsmp.quests.quest.Reward.from(
+                plugin.getConfig().getConfigurationSection(base + "participant")))) {
+            rewards.add(" &8• " + line);
+        }
+        rewards.add("");
+        rewards.add("&7The &6top damager &7also gets:");
+        for (String line : plugin.getRewards().describe(com.blossomsmp.quests.quest.Reward.from(
+                plugin.getConfig().getConfigurationSection(base + "top-damager")))) {
+            rewards.add(" &8• " + line);
+        }
+        rewards.add(" &8• &f" + type.cfgInt("weapon-chance", 35) + "% &7chance at the weapon");
+        rewards.add("");
+        rewards.add("&7Everyone: &f" + type.cfgInt("sigil-chance", 10) + "% &7chance at a sigil");
+        h.set(12, item(Material.GOLD_INGOT, "&6&lRewards", rewards), null);
+        h.set(14, plugin.getItems().weapon(type.weaponId()), null);
+        h.set(16, plugin.getItems().sigil(type.sigilId()), null);
+        h.set(27, back(), this::openBoss);
         open(player, h);
     }
 

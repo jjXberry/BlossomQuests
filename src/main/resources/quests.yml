@@ -327,7 +327,7 @@ weekly:
       petals: 600
       points: 150
   warden_slayer:
-    name: "Warden Slayer"
+    name: "Boss Slayer"
     icon: WITHER_SKELETON_SKULL
     type: BOSS
     target: ANY
@@ -340,7 +340,7 @@ weekly:
 # ============================================
 # Achievements: one-time goals. counter can be:
 # mine, place, kill_mob, kill_player, fish, craft, breed, playtime (minutes),
-# boss (Sakura Warden kills), quests (quests finished), board (Quest Board deliveries)
+# boss (any boss kill), boss_sakura, boss_ember, boss_frost, quests (quests finished), board (Quest Board deliveries)
 # ============================================
 achievements:
   first_steps:
@@ -518,15 +518,15 @@ achievements:
     name: "Warden Hunter"
     description: "Help defeat the Sakura Warden"
     icon: WITHER_SKELETON_SKULL
-    counter: boss
+    counter: boss_sakura
     goal: 1
     rewards:
       money: 5000
       petals: 300
       points: 50
   warden_10:
-    name: "Warden's Bane"
-    description: "Help defeat the Sakura Warden 10 times"
+    name: "Boss Hunter"
+    description: "Help defeat any boss 10 times"
     icon: NETHER_STAR
     counter: boss
     goal: 10
@@ -535,6 +535,48 @@ achievements:
       petals: 1500
       points: 300
       items: ["sigil:1"]
+  ember_1:
+    name: "Fire Walker"
+    description: "Help defeat the Ember Tyrant"
+    icon: MAGMA_CREAM
+    counter: boss_ember
+    goal: 1
+    rewards:
+      money: 6000
+      petals: 350
+      points: 60
+  frost_1:
+    name: "Ice Breaker"
+    description: "Help defeat the Frostbound King"
+    icon: BLUE_ICE
+    counter: boss_frost
+    goal: 1
+    rewards:
+      money: 6000
+      petals: 350
+      points: 60
+  ember_10:
+    name: "Tyrant Slayer"
+    description: "Help defeat the Ember Tyrant 10 times"
+    icon: BLAZE_ROD
+    counter: boss_ember
+    goal: 10
+    rewards:
+      money: 30000
+      petals: 1500
+      points: 300
+      items: ["ember_sigil:1"]
+  frost_10:
+    name: "King of Winter"
+    description: "Help defeat the Frostbound King 10 times"
+    icon: PACKED_ICE
+    counter: boss_frost
+    goal: 10
+    rewards:
+      money: 30000
+      petals: 1500
+      points: 300
+      items: ["frost_sigil:1"]
   courier:
     name: "Courier"
     description: "Deliver 10 Quest Board requests"

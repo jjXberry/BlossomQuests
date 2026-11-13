@@ -35,7 +35,9 @@ public record QuestDef(String id, String scope, String name, List<String> descri
             return "Kill " + amount + " player" + (amount == 1 ? "" : "s");
         }
         if (type == QuestType.BOSS) {
-            return "Defeat the Sakura Warden " + amount + " time" + (amount == 1 ? "" : "s");
+            String boss = targets.contains("SAKURA") ? "the Sakura Warden" : targets.contains("EMBER") ? "the Ember Tyrant"
+                    : targets.contains("FROST") ? "the Frostbound King" : "any boss";
+            return "Help defeat " + boss + " " + amount + " time" + (amount == 1 ? "" : "s");
         }
         if (targets.isEmpty() || targets.contains("ANY")) {
             what = switch (type) {

@@ -7,7 +7,7 @@ import com.blossomsmp.quests.commands.QuestCommand;
 import com.blossomsmp.quests.data.DataStore;
 import com.blossomsmp.quests.items.CustomItems;
 import com.blossomsmp.quests.listeners.ChatListener;
-import com.blossomsmp.quests.listeners.ItemListener;
+import com.blossomsmp.quests.listeners.WeaponListener;
 import com.blossomsmp.quests.listeners.MenuListener;
 import com.blossomsmp.quests.listeners.ProgressListener;
 import com.blossomsmp.quests.menus.MenuHolder;
@@ -37,10 +37,14 @@ public final class BlossomQuests extends JavaPlugin {
     private CustomItems items;
     private Menus menus;
     private ChatPrompts prompts;
+    private WeaponListener weaponListener;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        // Add new settings from updates to an existing config.yml
+        getConfig().options().copyDefaults(true);
+        saveConfig();
 
         items = new CustomItems(this);
         data = new DataStore(this);
@@ -58,7 +62,8 @@ public final class BlossomQuests extends JavaPlugin {
 
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new ProgressListener(this), this);
-        pm.registerEvents(new ItemListener(this), this);
+        weaponListener = new WeaponListener(this);
+        pm.registerEvents(weaponListener, this);
         pm.registerEvents(new MenuListener(this), this);
         pm.registerEvents(new ChatListener(this), this);
         pm.registerEvents(boss, this);
@@ -99,7 +104,7 @@ public final class BlossomQuests extends JavaPlugin {
             }
         }
         if (boss != null) {
-            boss.despawn();
+            boss.despawn(null);
         }
         if (data != null) {
             data.saveAll();
@@ -153,5 +158,9 @@ public final class BlossomQuests extends JavaPlugin {
 
     public ChatPrompts getPrompts() {
         return prompts;
+    }
+
+    public WeaponListener getWeaponListener() {
+        return weaponListener;
     }
 }
